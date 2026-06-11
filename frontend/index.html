@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNR.412 Workshop - Monitoring System</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Page Background Wrapper -->
+    <div class="page-wrapper">
+    <!-- Background Image Layer -->
+    <div class="bg-image-layer landing-bg"></div>
+    <!-- Multiply Overlay Layer -->
+    <div class="bg-overlay-layer"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar sticky-top landing-navbar" id="navbar">
+        <div class="container-fluid justify-content-center">
+            <a class="navbar-brand mx-auto" href="index.html">
+                <img src="public/images/DNR.412 LOGO.png" alt="DNR.412" height="44">
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-5 landing-main">
+        <div class="container">
+
+            <!-- Hero Card -->
+            <div class="row mb-5">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center py-5">
+                            <h1 class="display-4 mb-3">Selamat Datang</h1>
+                            <p class="lead text-muted mb-4">Sistem Monitoring Workshop DNR.412</p>
+                            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                                <a href="klien/cek-status.html" class="btn btn-primary btn-lg px-4 gap-3">
+                                    <i class="bi bi-search"></i> Cek Status Servis
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+
+                    <!-- FAQ Header -->
+                    <div class="text-center mb-4">
+                        <span class="faq-label">FAQ</span>
+                        <h2 class="faq-title">Pertanyaan yang Sering Diajukan</h2>
+                        <p class="faq-subtitle">Temukan jawaban atas pertanyaan umum seputar layanan servis kami</p>
+                    </div>
+
+                    <!-- Accordion -->
+                    <div class="accordion faq-accordion" id="faqAccordion">
+
+                        <!-- Item 1 -->
+                        <div class="accordion-item faq-item">
+                            <h2 class="accordion-header" id="faqHead1">
+                                <button class="accordion-button faq-btn" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqBody1"
+                                    aria-expanded="true" aria-controls="faqBody1">
+                                    <span class="faq-icon"><i class="bi bi-search"></i></span>
+                                    Bagaimana cara mengecek status servis motor saya?
+                                </button>
+                            </h2>
+                            <div id="faqBody1" class="accordion-collapse collapse show"
+                                aria-labelledby="faqHead1" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body faq-body">
+                                    Anda cukup menekan tombol merah <strong>"Cek Status Servis"</strong> yang ada di bagian atas halaman ini. Setelah itu, masukkan data kendaraan Anda (misalnya plat nomor atau ID Order) untuk melihat laporan progres saat ini.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="accordion-item faq-item">
+                            <h2 class="accordion-header" id="faqHead2">
+                                <button class="accordion-button faq-btn collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqBody2"
+                                    aria-expanded="false" aria-controls="faqBody2">
+                                    <span class="faq-icon"><i class="bi bi-person-check"></i></span>
+                                    Apakah saya perlu membuat akun untuk melacak servis?
+                                </button>
+                            </h2>
+                            <div id="faqBody2" class="accordion-collapse collapse"
+                                aria-labelledby="faqHead2" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body faq-body">
+                                    Tidak. Anda dapat menggunakan fitur pelacakan <em>(tracking)</em> publik ini secara langsung tanpa harus melakukan login atau membuat akun di sistem kami.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="accordion-item faq-item">
+                            <h2 class="accordion-header" id="faqHead3">
+                                <button class="accordion-button faq-btn collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqBody3"
+                                    aria-expanded="false" aria-controls="faqBody3">
+                                    <span class="faq-icon"><i class="bi bi-list-check"></i></span>
+                                    Apa saja arti dari status servis yang ditampilkan?
+                                </button>
+                            </h2>
+                            <div id="faqBody3" class="accordion-collapse collapse"
+                                aria-labelledby="faqHead3" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body faq-body">
+                                    <p class="mb-3">Sistem kami mencatat progres pengerjaan dalam <strong>4 tahap</strong>:</p>
+                                    <div class="faq-status-grid">
+                                        <div class="faq-status-item">
+                                            <span class="badge badge-pending">Menunggu</span>
+                                            <small>Masuk dalam antrean</small>
+                                        </div>
+                                        <div class="faq-status-item">
+                                            <span class="badge badge-proses">Dikerjakan</span>
+                                            <small>Sedang ditangani mekanik</small>
+                                        </div>
+                                        <div class="faq-status-item">
+                                            <span class="badge badge-selesai">Selesai</span>
+                                            <small>Servis rampung</small>
+                                        </div>
+                                        <div class="faq-status-item">
+                                            <span class="badge" style="background: linear-gradient(135deg, #6C63FF, #4F46E5); color:white;">Diambil</span>
+                                            <small>Kendaraan diserahkan kembali</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div class="accordion-item faq-item">
+                            <h2 class="accordion-header" id="faqHead4">
+                                <button class="accordion-button faq-btn collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faqBody4"
+                                    aria-expanded="false" aria-controls="faqBody4">
+                                    <span class="faq-icon"><i class="bi bi-whatsapp"></i></span>
+                                    Apakah saya bisa berkonsultasi sebelum datang ke bengkel?
+                                </button>
+                            </h2>
+                            <div id="faqBody4" class="accordion-collapse collapse"
+                                aria-labelledby="faqHead4" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body faq-body">
+                                    Tentu saja! Anda bisa memanfaatkan opsi <strong>"Konsultasi via WhatsApp"</strong> yang ada di bagian bawah halaman ini untuk menghubungi admin bengkel dan mendiskusikan keluhan kendaraan Anda.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /#faqAccordion -->
+                </div>
+            </div><!-- /.row FAQ -->
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="klien-footer text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 DNR.412 Workshop. All rights reserved.</p>
+        </div>
+    </footer>
+    </div><!-- /.page-wrapper -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Custom JS -->
+    <script src="assets/js/config.js"></script>
+</body>
+</html>

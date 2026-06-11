@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - DNR.412 Workshop</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .faq-hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+            color: white;
+            padding: 3rem 0 2.5rem;
+        }
+        .faq-hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .faq-hero p {
+            color: rgba(255,255,255,0.7);
+        }
+        .faq-search-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .faq-search-wrapper .form-control {
+            border-radius: 50px 0 0 50px;
+            padding: 0.75rem 1.25rem;
+            border: none;
+        }
+        .faq-search-wrapper .btn {
+            border-radius: 0 50px 50px 0;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .faq-category-btn {
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .faq-category-btn.active {
+            background-color: #1a1a2e;
+            color: white;
+            border-color: #1a1a2e;
+        }
+
+        .faq-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+        .faq-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .faq-card .accordion-button {
+            font-weight: 600;
+            color: #1a1a2e;
+            background-color: #fff;
+            padding: 1.1rem 1.5rem;
+        }
+        .faq-card .accordion-button:not(.collapsed) {
+            color: #667eea;
+            background-color: #f8f7ff;
+            box-shadow: none;
+        }
+        .faq-card .accordion-button::after {
+            filter: none;
+        }
+        .faq-card .accordion-body {
+            background-color: #f8f9fa;
+            padding: 1.25rem 1.5rem;
+            color: #555;
+            line-height: 1.7;
+        }
+        .faq-card .accordion-body ul {
+            padding-left: 1.25rem;
+        }
+        .faq-card .accordion-body ul li {
+            margin-bottom: 0.4rem;
+        }
+
+        .category-icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .no-result-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: #adb5bd;
+        }
+        .no-result-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+                <img src="../public/images/DNR.412 LOGO.png" alt="DNR.412" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="antrian.html">
+                            <i class="bi bi-list-check"></i> Antrian
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pelanggan.html">
+                            <i class="bi bi-people"></i> Pelanggan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="order.html">
+                            <i class="bi bi-plus-circle"></i> Buat Order
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="order-list.html">
+                            <i class="bi bi-card-list"></i> List Order
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="userName">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item active" href="faq.html"><i class="bi bi-question-circle"></i> FAQ</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openChangePasswordModal()"><i class="bi bi-key"></i> Ganti Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="faq-hero">
+        <div class="container text-center">
+            <div class="mb-3">
+                <i class="bi bi-question-circle-fill" style="font-size: 2.5rem; opacity: 0.85;"></i>
+            </div>
+            <h1>Pusat Bantuan & FAQ</h1>
+            <p class="mb-4">Temukan jawaban seputar penggunaan fitur-fitur admin DNR.412 Workshop</p>
+            <!-- Search -->
+            <div class="faq-search-wrapper">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="faqSearch" placeholder="Cari pertanyaan...">
+                    <button class="btn btn-primary" type="button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container py-5">
+
+        <!-- Category Filter -->
+        <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center" id="categoryBtns">
+            <button class="btn btn-outline-dark faq-category-btn active" data-category="all" onclick="filterCategory('all', this)">
+                Semua
+            </button>
+            <button class="btn btn-outline-dark faq-category-btn" data-category="dashboard" onclick="filterCategory('dashboard', this)">
+                <i class="bi bi-speedometer2 me-1"></i> Dashboard
+            </button>
+            <button class="btn btn-outline-dark faq-category-btn" data-category="antrian" onclick="filterCategory('antrian', this)">
+                <i class="bi bi-list-check me-1"></i> Antrian
+            </button>
+            <button class="btn btn-outline-dark faq-category-btn" data-category="pelanggan" onclick="filterCategory('pelanggan', this)">
+                <i class="bi bi-people me-1"></i> Pelanggan
+            </button>
+            <button class="btn btn-outline-dark faq-category-btn" data-category="order" onclick="filterCategory('order', this)">
+                <i class="bi bi-wrench me-1"></i> Order Servis
+            </button>
+            <button class="btn btn-outline-dark faq-category-btn" data-category="akun" onclick="filterCategory('akun', this)">
+                <i class="bi bi-person-circle me-1"></i> Akun & Login
+            </button>
+        </div>
+
+        <!-- FAQ Items -->
+        <div id="faqContainer">
+
+            <!-- ============ DASHBOARD ============ -->
+            <div class="faq-section mb-4" data-category="dashboard">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="category-icon-circle bg-primary text-white">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Dashboard</h5>
+                </div>
+                <div class="accordion" id="faqDashboard">
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-d1">
+                                    Apa saja yang ditampilkan di halaman Dashboard?
+                                </button>
+                            </h2>
+                            <div id="faq-d1" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Halaman Dashboard menampilkan ringkasan data secara real-time, meliputi:
+                                    <ul class="mt-2">
+                                        <li><strong>Total Antrian</strong> — jumlah total antrian yang terdaftar</li>
+                                        <li><strong>Total Pelanggan</strong> — jumlah pelanggan yang sudah diregistrasi</li>
+                                        <li><strong>Order Proses</strong> — jumlah order yang sedang dikerjakan</li>
+                                        <li><strong>Order Selesai</strong> — jumlah order yang telah selesai</li>
+                                        <li><strong>Antrian Terbaru</strong> — 5 antrian terakhir yang masuk</li>
+                                        <li><strong>Order Terbaru</strong> — 5 order terakhir yang dibuat</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-d2">
+                                    Data di Dashboard tidak terupdate, apa yang harus dilakukan?
+                                </button>
+                            </h2>
+                            <div id="faq-d2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Dashboard memuat data secara otomatis saat halaman dibuka. Jika data terasa tidak sinkron, cukup <strong>refresh halaman</strong> (tekan F5 atau Ctrl+R). Pastikan juga koneksi internet dan server backend dalam kondisi aktif.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ============ ANTRIAN ============ -->
+            <div class="faq-section mb-4" data-category="antrian">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="category-icon-circle bg-warning text-dark">
+                        <i class="bi bi-list-check"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Antrian</h5>
+                </div>
+                <div class="accordion" id="faqAntrian">
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-a1">
+                                    Dari mana antrian pelanggan berasal?
+                                </button>
+                            </h2>
+                            <div id="faq-a1" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Antrian dibuat oleh <strong>pelanggan sendiri</strong> melalui halaman cek status / booking di sisi klien. Admin tidak perlu menambahkan antrian secara manual — fokus admin adalah memantau dan memperbarui status antrian yang masuk.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-a2">
+                                    Bagaimana cara memperbarui status antrian?
+                                </button>
+                            </h2>
+                            <div id="faq-a2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Di halaman <strong>Antrian</strong>, setiap baris data memiliki tombol <span class="badge bg-primary">Update Status</span>. Klik tombol tersebut, lalu pilih status yang sesuai:
+                                    <ul class="mt-2">
+                                        <li><span class="badge bg-secondary">Pending</span> — Antrian baru masuk, belum diproses</li>
+                                        <li><span class="badge bg-warning text-dark">Proses</span> — Motor sedang dalam pengerjaan</li>
+                                        <li><span class="badge bg-success">Selesai</span> — Motor sudah selesai diservis</li>
+                                        <li><span class="badge bg-danger">Batal</span> — Antrian dibatalkan</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-a3">
+                                    Bagaimana cara mencari antrian tertentu?
+                                </button>
+                            </h2>
+                            <div id="faq-a3" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Gunakan <strong>kolom pencarian</strong> di bagian atas tabel untuk mencari berdasarkan nama pelanggan atau nomor motor. Anda juga bisa menggunakan <strong>filter status</strong> untuk menyaring antrian berdasarkan statusnya. Klik tombol <em>Reset</em> untuk menghapus filter.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ============ PELANGGAN ============ -->
+            <div class="faq-section mb-4" data-category="pelanggan">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="category-icon-circle bg-success text-white">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Pelanggan</h5>
+                </div>
+                <div class="accordion" id="faqPelanggan">
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-p1">
+                                    Bagaimana cara menambahkan data pelanggan baru?
+                                </button>
+                            </h2>
+                            <div id="faq-p1" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Buka halaman <strong>Pelanggan</strong> lalu klik tombol <span class="badge bg-primary">+ Tambah Pelanggan</span> di pojok kanan atas. Isi form yang muncul dengan data pelanggan (nama, nomor telepon, email, dan alamat), lalu klik <em>Simpan</em>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-p2">
+                                    Bagaimana cara mengedit atau menghapus data pelanggan?
+                                </button>
+                            </h2>
+                            <div id="faq-p2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Di tabel pelanggan, kolom <strong>Aksi</strong> menyediakan dua tombol:
+                                    <ul class="mt-2">
+                                        <li><span class="badge bg-warning text-dark"><i class="bi bi-pencil"></i> Edit</span> — untuk mengubah data pelanggan</li>
+                                        <li><span class="badge bg-danger"><i class="bi bi-trash"></i> Hapus</span> — untuk menghapus data (akan muncul konfirmasi)</li>
+                                    </ul>
+                                    Pastikan tidak menghapus pelanggan yang masih memiliki antrian atau order aktif.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-p3">
+                                    Field apa saja yang wajib diisi saat menambah pelanggan?
+                                </button>
+                            </h2>
+                            <div id="faq-p3" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Field yang wajib diisi (ditandai <span class="text-danger">*</span>) adalah <strong>Nama</strong> dan <strong>Nomor Telepon</strong>. Field Email dan Alamat bersifat opsional namun disarankan diisi untuk keperluan komunikasi.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ============ ORDER SERVIS ============ -->
+            <div class="faq-section mb-4" data-category="order">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="category-icon-circle bg-info text-white">
+                        <i class="bi bi-wrench"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Order Servis</h5>
+                </div>
+                <div class="accordion" id="faqOrder">
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-o1">
+                                    Bagaimana cara membuat order servis baru?
+                                </button>
+                            </h2>
+                            <div id="faq-o1" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Buka halaman <strong>Order Servis</strong>. Halaman ini langsung menampilkan form pengisian data pelanggan dan detail servis. Isi semua field yang diperlukan:
+                                    <ul class="mt-2">
+                                        <li>Nama Pelanggan dan Nomor Telepon</li>
+                                        <li>Nomor Polisi dan Jenis Motor</li>
+                                        <li>Deskripsi keluhan atau pekerjaan servis</li>
+                                        <li>Tanggal masuk, estimasi selesai, dan estimasi biaya</li>
+                                        <li>Status awal (default: Pending)</li>
+                                    </ul>
+                                    Setelah selesai, klik tombol <span class="badge" style="background:linear-gradient(135deg,#667eea,#764ba2)"><i class="bi bi-send-fill"></i> Buat Order Servis</span>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-o2">
+                                    Apa fungsi sidebar "Order Terbaru" di halaman Order Servis?
+                                </button>
+                            </h2>
+                            <div id="faq-o2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Sidebar <strong>Order Terbaru</strong> di sebelah kanan menampilkan 10 order terakhir yang telah dibuat. Ini memudahkan admin untuk melihat riwayat order terkini tanpa harus menavigasi ke halaman lain. Klik tombol <em>Refresh</em> untuk memuat ulang daftarnya.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-o3">
+                                    Apakah estimasi biaya bisa diubah setelah order dibuat?
+                                </button>
+                            </h2>
+                            <div id="faq-o3" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Ya. Biaya yang diisi saat membuat order adalah <em>estimasi awal</em>. Admin dapat memperbarui biaya aktual setelah servis selesai melalui fitur Edit Order yang tersedia di daftar order terbaru atau melalui update data.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-o4">
+                                    Format nomor polisi yang benar seperti apa?
+                                </button>
+                            </h2>
+                            <div id="faq-o4" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Gunakan format standar Indonesia dengan spasi, contoh: <strong>B 1234 ABC</strong>, <strong>D 5678 XY</strong>, <strong>AB 9012 CD</strong>. Penulisan yang konsisten memudahkan pencarian dan identifikasi kendaraan pelanggan.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ============ AKUN & LOGIN ============ -->
+            <div class="faq-section mb-4" data-category="akun">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="category-icon-circle bg-dark text-white">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <h5 class="mb-0 fw-bold">Akun & Login</h5>
+                </div>
+                <div class="accordion" id="faqAkun">
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-ak1">
+                                    Bagaimana cara logout dari sistem?
+                                </button>
+                            </h2>
+                            <div id="faq-ak1" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Klik nama admin di pojok kanan navbar, lalu pilih <strong>Logout</strong> dari dropdown menu. Sistem akan menampilkan konfirmasi sebelum keluar untuk menghindari logout tidak sengaja.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-ak2">
+                                    Saya diarahkan ke halaman login secara tiba-tiba, kenapa?
+                                </button>
+                            </h2>
+                            <div id="faq-ak2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Hal ini terjadi karena <strong>sesi login telah berakhir</strong> (token kadaluarsa). Sistem secara otomatis mengamankan halaman admin dengan mengecek autentikasi setiap kali halaman dimuat. Cukup login kembali dengan kredensial admin Anda.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-ak3">
+                                    Apakah ada fitur lupa password?
+                                </button>
+                            </h2>
+                            <div id="faq-ak3" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Saat ini fitur lupa password belum tersedia di antarmuka ini. Jika lupa password, hubungi administrator sistem untuk melakukan reset password secara manual melalui database atau panel backend.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- No Result State -->
+            <div id="noResultState" class="no-result-state d-none">
+                <i class="bi bi-search"></i>
+                <p class="fw-semibold">Tidak ada pertanyaan yang cocok</p>
+                <p class="small">Coba kata kunci lain atau pilih kategori berbeda.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-3">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 DNR.412 Workshop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Config -->
+    <script src="../assets/js/config.js"></script>
+    <!-- Auth -->
+    <script src="../assets/js/auth.js"></script>
+    <!-- Router -->
+    <script src="../assets/js/router.js"></script>
+
+    <script>
+        // Auth check
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!Auth.isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = Auth.getCurrentUser();
+            if (user) {
+                document.getElementById('userName').textContent = user.username || 'Admin';
+            }
+        });
+
+        // Logout
+        function logout() {
+            Swal.fire({
+                title: 'Logout',
+                text: 'Apakah Anda yakin ingin logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then(result => {
+                if (result.isConfirmed) Auth.logout();
+            });
+        }
+
+        // Category Filter
+        function filterCategory(category, btn) {
+            // Update active button
+            document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const sections = document.querySelectorAll('.faq-section');
+            sections.forEach(section => {
+                if (category === 'all' || section.dataset.category === category) {
+                    section.classList.remove('d-none');
+                } else {
+                    section.classList.add('d-none');
+                }
+            });
+
+            // Clear search
+            document.getElementById('faqSearch').value = '';
+            document.getElementById('noResultState').classList.add('d-none');
+        }
+
+        // Live Search
+        document.getElementById('faqSearch').addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.faq-card');
+            const sections = document.querySelectorAll('.faq-section');
+
+            // Reset category filter UI
+            document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-category="all"]').classList.add('active');
+
+            if (!query) {
+                sections.forEach(s => s.classList.remove('d-none'));
+                cards.forEach(c => c.classList.remove('d-none'));
+                document.getElementById('noResultState').classList.add('d-none');
+                return;
+            }
+
+            let anyVisible = false;
+            sections.forEach(section => section.classList.remove('d-none'));
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.classList.remove('d-none');
+                    anyVisible = true;
+                } else {
+                    card.classList.add('d-none');
+                }
+            });
+
+            // Hide empty sections
+            sections.forEach(section => {
+                const visibleCards = section.querySelectorAll('.faq-card:not(.d-none)');
+                if (visibleCards.length === 0) {
+                    section.classList.add('d-none');
+                }
+            });
+
+            document.getElementById('noResultState').classList.toggle('d-none', anyVisible);
+        });
+    </script>
+</body>
+</html>

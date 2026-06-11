@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antrian - DNR.412 Workshop</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/crud.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+                <img src="../../public/images/DNR.412 LOGO.png" alt="DNR.412" height="40" class="me-2">
+                <span>DNR.412 Workshop</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="antrian.html">
+                            <i class="bi bi-list-check"></i> Antrian
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pelanggan.html">
+                            <i class="bi bi-people"></i> Pelanggan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="order.html">
+                            <i class="bi bi-wrench"></i> Order Servis
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="userName">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Pengaturan</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-4">
+        <div class="container-lg">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h3 mb-0">
+                                <i class="bi bi-list-check"></i> Manajemen Antrian
+                            </h1>
+                            <p class="text-muted">Kelola data antrian motor</p>
+                        </div>
+                        <button class="btn btn-primary btn-lg" onclick="showAddForm()">
+                            <i class="bi bi-plus-circle"></i> Tambah Antrian
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="searchInput" 
+                            placeholder="Cari nama pelanggan atau nomor motor..."
+                        >
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="statusFilter">
+                        <option value="">Semua Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="proses">Proses</option>
+                        <option value="selesai">Selesai</option>
+                        <option value="batal">Batal</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
+                        <i class="bi bi-arrow-clockwise"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Pelanggan</th>
+                                    <th>Nomor Motor</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="antrianTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center" id="paginationContainer">
+                    <!-- Pagination will be generated here -->
+                </ul>
+            </nav>
+        </div>
+    </main>
+
+    <!-- Modal Form -->
+    <div class="modal fade" id="formModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formTitle">Tambah Antrian</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="antrianForm">
+                        <div class="form-group mb-3">
+                            <label for="namaPelanggan" class="form-label">Nama Pelanggan *</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="namaPelanggan" 
+                                placeholder="Masukkan nama pelanggan"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="nomorMotor" class="form-label">Nomor Motor *</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="nomorMotor" 
+                                placeholder="Contoh: B 1234 ABC"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="jenisMotor" class="form-label">Jenis Motor</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="jenisMotor" 
+                                placeholder="Contoh: Honda CB150R"
+                            >
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="keluhan" class="form-label">Keluhan</label>
+                            <textarea 
+                                class="form-control" 
+                                id="keluhan" 
+                                rows="3" 
+                                placeholder="Deskripsi keluhan motor"
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="status" class="form-label">Status *</label>
+                            <select class="form-select" id="status" required>
+                                <option value="">Pilih Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="proses">Proses</option>
+                                <option value="selesai">Selesai</option>
+                                <option value="batal">Batal</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAntrian()">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 DNR.412 Workshop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Config -->
+    <script src="../../assets/js/config.js"></script>
+    <!-- Antrian Script -->
+    <script src="../../assets/js/antrian.js"></script>
+</body>
+</html>

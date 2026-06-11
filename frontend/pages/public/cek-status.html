@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Status - DNR.412 Workshop</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/cek-status.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../../index.html">
+                <img src="../../public/images/DNR.412 LOGO.png" alt="DNR.412" height="40" class="me-2">
+                <span>DNR.412 Workshop</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cek-status.html">
+                            <i class="bi bi-search"></i> Cek Status
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../admin/login.html">
+                            <i class="bi bi-box-arrow-in-right"></i> Login Admin
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Header -->
+                    <div class="text-center mb-5">
+                        <h1 class="display-5 mb-3">
+                            <i class="bi bi-search"></i> Cek Status Servis
+                        </h1>
+                        <p class="lead text-muted">Masukkan nomor motor Anda untuk melihat status servis</p>
+                    </div>
+
+                    <!-- Search Card -->
+                    <div class="card shadow-lg mb-4">
+                        <div class="card-body p-4">
+                            <form id="searchForm" onsubmit="searchStatus(event)">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="nomorMotor" 
+                                        placeholder="Contoh: B 1234 ABC"
+                                        required
+                                    >
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="bi bi-search"></i> Cari
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div id="resultsContainer" style="display: none;">
+                        <!-- Antrian Results -->
+                        <div id="antrianResults" class="mb-4" style="display: none;">
+                            <h3 class="mb-3">
+                                <i class="bi bi-list-check"></i> Status Antrian
+                            </h3>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="text-muted mb-1">Nama Pelanggan</p>
+                                            <p class="h5" id="antrianNama">-</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="text-muted mb-1">Nomor Motor</p>
+                                            <p class="h5" id="antrianMotor">-</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="text-muted mb-1">Jenis Motor</p>
+                                            <p class="h5" id="antrianJenis">-</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="text-muted mb-1">Tanggal Masuk</p>
+                                            <p class="h5" id="antrianTanggal">-</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p class="text-muted mb-1">Status</p>
+                                            <p id="antrianStatus"></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p class="text-muted mb-1">Keluhan</p>
+                                            <p id="antrianKeluhan">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Results -->
+                        <div id="orderResults" class="mb-4" style="display: none;">
+                            <h3 class="mb-3">
+                                <i class="bi bi-wrench"></i> Status Order Servis
+                            </h3>
+                            <div id="orderList"></div>
+                        </div>
+
+                        <!-- No Results -->
+                        <div id="noResults" class="alert alert-info" style="display: none;">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Tidak ada data</strong> untuk nomor motor yang Anda cari.
+                        </div>
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="alert alert-light border mt-4">
+                        <h5 class="mb-2">
+                            <i class="bi bi-info-circle"></i> Informasi
+                        </h5>
+                        <ul class="mb-0">
+                            <li>Masukkan nomor motor dengan format yang benar (contoh: B 1234 ABC)</li>
+                            <li>Anda dapat melihat status antrian dan order servis motor Anda</li>
+                            <li>Status akan diperbarui secara real-time oleh admin</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 DNR.412 Workshop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Config -->
+    <script src="../../assets/js/config.js"></script>
+    <!-- Cek Status Script -->
+    <script src="../../assets/js/cek-status.js"></script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Servis - DNR.412 Workshop</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/crud.css">
+    <style>
+        .order-form-card {
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 16px;
+        }
+        .order-form-card .card-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            border-radius: 16px 16px 0 0;
+            padding: 1.25rem 1.5rem;
+        }
+        .section-divider {
+            border-top: 2px dashed #e9ecef;
+            margin: 1.5rem 0;
+        }
+        .form-section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        .btn-submit-order {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-submit-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+            color: white;
+        }
+        .btn-reset-order {
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        .recent-orders-card {
+            border: none;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border-radius: 12px;
+        }
+
+        /* ─── Pelanggan Search Modal ─── */
+        .btn-cari-pelanggan {
+            border-radius: 0 6px 6px 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .btn-cari-pelanggan:hover {
+            opacity: 0.88;
+            color: white;
+        }
+
+        /* Badge pelanggan terpilih */
+        .selected-pelanggan-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #eef2ff;
+            color: #4f46e5;
+            border: 1px solid #c7d2fe;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .selected-pelanggan-badge .btn-clear {
+            background: none;
+            border: none;
+            color: #4f46e5;
+            padding: 0;
+            line-height: 1;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Tabel modal pelanggan */
+        #pelangganSearchModal .modal-dialog {
+            max-width: 720px;
+        }
+        .pelanggan-row {
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .pelanggan-row:hover {
+            background-color: #f0f4ff !important;
+        }
+        .pelanggan-row td {
+            vertical-align: middle;
+        }
+
+        /* Empty state dalam modal */
+        .modal-empty-state {
+            text-align: center;
+            padding: 2rem 0;
+            color: #adb5bd;
+        }
+        .modal-empty-state i { font-size: 2.5rem; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard.html">
+                <img src="../public/images/DNR.412 LOGO.png" alt="DNR.412" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="antrian.html">
+                            <i class="bi bi-list-check"></i> Antrian
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pelanggan.html">
+                            <i class="bi bi-people"></i> Pelanggan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="order.html">
+                            <i class="bi bi-plus-circle"></i> Buat Order
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="order-list.html">
+                            <i class="bi bi-card-list"></i> List Order
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="userName">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="faq.html"><i class="bi bi-question-circle"></i> FAQ</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openChangePasswordModal()"><i class="bi bi-key"></i> Ganti Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-4">
+        <div class="container-lg">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-wrench"></i> Order Servis
+                    </h1>
+                    <p class="text-muted">Buat order servis baru — cari pelanggan terdaftar atau isi data manual</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- ════════════ Form Order Servis ════════════ -->
+                <div class="col-lg-8 mb-4">
+                    <div class="card order-form-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-clipboard-plus"></i> Form Order Servis Baru
+                            </h5>
+                            <!-- Badge pelanggan terpilih -->
+                            <span id="selectedPelangganBadge" class="selected-pelanggan-badge d-none">
+                                <i class="bi bi-person-check-fill"></i>
+                                <span id="selectedPelangganName">—</span>
+                                <button class="btn-clear" onclick="clearSelectedPelanggan()" title="Hapus pilihan">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="orderForm" novalidate>
+
+                                <!-- ── Data Pelanggan ── -->
+                                <p class="form-section-title"><i class="bi bi-person-fill me-1"></i> Data Pelanggan</p>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="namaPelanggan" class="form-label">
+                                            Nama Pelanggan <span class="text-danger">*</span>
+                                        </label>
+                                        <!-- Input group dengan tombol Cari -->
+                                        <div class="input-group">
+                                            <input 
+                                                type="text" 
+                                                class="form-control" 
+                                                id="namaPelanggan" 
+                                                placeholder="Ketik nama atau klik Cari Pelanggan"
+                                                required
+                                            >
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-cari-pelanggan"
+                                                onclick="openPelangganModal()"
+                                                title="Cari dari daftar pelanggan terdaftar"
+                                            >
+                                                <i class="bi bi-search me-1"></i> Cari
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback">Nama pelanggan wajib diisi.</div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-info-circle"></i> Klik <strong>Cari</strong> untuk memilih dari pelanggan terdaftar
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nomorTelepon" class="form-label">Nomor Telepon</label>
+                                        <input 
+                                            type="tel" 
+                                            class="form-control" 
+                                            id="nomorTelepon" 
+                                            placeholder="Contoh: 081234567890"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- ── Data Kendaraan ── -->
+                                <p class="form-section-title"><i class="bi bi-motorcycle me-1"></i> Data Kendaraan</p>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nomorMotor" class="form-label">Nomor Polisi <span class="text-danger">*</span></label>
+                                        <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="nomorMotor" 
+                                            placeholder="Contoh: B 1234 ABC"
+                                            required
+                                        >
+                                        <div class="invalid-feedback">Nomor polisi wajib diisi.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="jenisMotor" class="form-label">Jenis / Tipe Motor</label>
+                                        <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="jenisMotor" 
+                                            placeholder="Contoh: Honda CB150R 2022"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- ── Detail Servis ── -->
+                                <p class="form-section-title"><i class="bi bi-tools me-1"></i> Detail Servis</p>
+                                <div class="mb-3">
+                                    <label for="deskripsi" class="form-label">Deskripsi Keluhan / Pekerjaan <span class="text-danger">*</span></label>
+                                    <textarea 
+                                        class="form-control" 
+                                        id="deskripsi" 
+                                        rows="3" 
+                                        placeholder="Jelaskan keluhan atau pekerjaan servis yang diminta pelanggan"
+                                        required
+                                    ></textarea>
+                                    <div class="invalid-feedback">Deskripsi pekerjaan wajib diisi.</div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="tanggal" class="form-label">Tanggal Masuk <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="tanggal" required>
+                                        <div class="invalid-feedback">Tanggal masuk wajib diisi.</div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="estimasiSelesai" class="form-label">Estimasi Selesai</label>
+                                        <input type="date" class="form-control" id="estimasiSelesai">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="biaya" class="form-label">Estimasi Biaya (Rp)</label>
+                                        <input type="number" class="form-control" id="biaya" placeholder="0" min="0">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Status Awal <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="status" required>
+                                        <option value="pending" selected>Pending — Menunggu antrian</option>
+                                        <option value="proses">Proses — Langsung dikerjakan</option>
+                                    </select>
+                                    <div class="invalid-feedback">Status wajib dipilih.</div>
+                                </div>
+
+                                <!-- Tombol Aksi -->
+                                <div class="d-flex gap-3 mt-4">
+                                    <button type="button" class="btn btn-submit-order" onclick="submitOrderForm()">
+                                        <i class="bi bi-send-fill me-1"></i> Buat Order Servis
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary btn-reset-order" onclick="resetOrderForm()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i> Reset Form
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ════════════ Sidebar ════════════ -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card recent-orders-card">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-0 fw-bold">
+                                <i class="bi bi-clock-history text-primary"></i> Order Terbaru
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="recentOrdersList" style="max-height: 480px; overflow-y: auto;">
+                                <div class="text-center py-4 text-muted">
+                                    <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                                    <p class="mb-0 small">Memuat order terbaru...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white text-center">
+                            <a href="#" class="btn btn-sm btn-outline-primary" onclick="loadRecentOrders(); return false;">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Info Card -->
+                    <div class="card mt-3 border-0 bg-light">
+                        <div class="card-body">
+                            <h6 class="fw-bold text-dark"><i class="bi bi-info-circle text-primary me-1"></i> Panduan</h6>
+                            <ul class="small text-muted mb-0 ps-3">
+                                <li>Klik <strong>Cari</strong> di field nama untuk memilih pelanggan terdaftar</li>
+                                <li>Data motor & telepon akan otomatis terisi setelah memilih</li>
+                                <li>Field bertanda <span class="text-danger">*</span> wajib diisi</li>
+                                <li>Biaya adalah estimasi awal yang bisa diperbarui</li>
+                                <li>Status default adalah <strong>Pending</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- Modal Cari Pelanggan                            -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="modal fade" id="pelangganSearchModal" tabindex="-1" aria-labelledby="pelangganSearchModalLabel">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg,#1a1a2e,#16213e); color:white;">
+                    <h5 class="modal-title" id="pelangganSearchModalLabel">
+                        <i class="bi bi-people-fill me-2"></i>Cari Pelanggan Terdaftar
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Search bar modal -->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="pelangganSearchInput"
+                            placeholder="Cari nama, nomor telepon, atau nomor motor..."
+                            oninput="searchPelangganModal(this.value)"
+                        >
+                        <button class="btn btn-outline-secondary" type="button" onclick="searchPelangganModal('')">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Tabel hasil -->
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>No. Telepon</th>
+                                    <th>No. Motor</th>
+                                    <th>Jenis Motor</th>
+                                    <th class="text-center">Pilih</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pelangganModalBody">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                        <span class="ms-2 text-muted">Memuat data...</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Hint -->
+                    <p class="text-muted small mt-3 mb-0">
+                        <i class="bi bi-lightbulb"></i> Klik baris atau tombol <strong>Pilih</strong> untuk mengisi form secara otomatis.
+                        Jika pelanggan belum terdaftar, tutup modal dan isi form secara manual.
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <span class="text-muted small" id="pelangganCountLabel">—</span>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 DNR.412 Workshop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Config -->
+    <script src="../assets/js/config.js"></script>
+    <!-- Auth -->
+    <script src="../assets/js/auth.js"></script>
+    <!-- Router -->
+    <script src="../assets/js/router.js"></script>
+    <!-- Order Script -->
+    <script src="../assets/js/order.js"></script>
+</body>
+</html>
