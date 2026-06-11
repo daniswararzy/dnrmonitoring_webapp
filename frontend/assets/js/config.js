@@ -4,8 +4,14 @@
  */
 
 // API Configuration
+// RISK-1 FIX: URL backend otomatis menyesuaikan environment
+// - Development (localhost/127.0.0.1) → http://localhost:3000/api
+// - Production (server lain)          → /api (same-origin, wajib pakai reverse proxy)
+const _isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const API_CONFIG = {
-    BASE_URL: 'http://localhost:3000/api',
+    BASE_URL: _isLocal
+        ? 'http://localhost:3000/api'
+        : `${window.location.protocol}//${window.location.hostname}/api`,
     TIMEOUT: 10000,
     HEADERS: {
         'Content-Type': 'application/json',
@@ -179,6 +185,18 @@ function truncateText(text, length = 50) {
     return text.length > length ? text.substring(0, length) + '...' : text;
 }
 
+// Escape HTML — RISK-2 FIX: Cegah XSS saat data dari API dirender ke innerHTML
+// Wajib digunakan di halaman publik (cek-status) dan semua innerHTML interpolasi
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '-';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Check Authentication
 function isAuthenticated() {
     return !!localStorage.getItem('authToken');
@@ -259,6 +277,7 @@ window.Utils = {
     validateEmail,
     validatePhone,
     truncateText,
+    escapeHtml,
     isAuthenticated,
     getCurrentUser,
     logout,

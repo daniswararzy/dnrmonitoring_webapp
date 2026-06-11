@@ -68,20 +68,21 @@ function displayResults(antrian, orders) {
 
     resultsContainer.style.display = 'block';
 
-    // FIX #1: Gunakan field name sesuai backend (namaPemilik, tanggalMasuk, keterangan)
+    // RISK-2 FIX: Semua data dari API di-escape sebelum dirender ke innerHTML
+    const e = Utils.escapeHtml; // shorthand
+
     if (antrian && antrian.id) {
         antrianResults.style.display = 'block';
-        document.getElementById('antrianNama').textContent = antrian.namaPemilik || '-';
-        document.getElementById('antrianMotor').textContent = antrian.nomorMotor || '-';
-        document.getElementById('antrianJenis').textContent = antrian.jenisMotor || '-';
+        document.getElementById('antrianNama').textContent    = antrian.namaPemilik || '-';
+        document.getElementById('antrianMotor').textContent   = antrian.nomorMotor  || '-';
+        document.getElementById('antrianJenis').textContent   = antrian.jenisMotor  || '-';
         document.getElementById('antrianTanggal').textContent = Utils.formatDate(antrian.tanggalMasuk) || '-';
-        document.getElementById('antrianKeluhan').textContent = antrian.keterangan || '-';
-        document.getElementById('antrianStatus').innerHTML = Utils.getStatusBadge(antrian.status);
+        document.getElementById('antrianKeluhan').textContent = antrian.keterangan  || '-';
+        document.getElementById('antrianStatus').innerHTML    = Utils.getStatusBadge(antrian.status);
     } else {
         antrianResults.style.display = 'none';
     }
 
-    // FIX #2: Gunakan field name sesuai backend untuk order (namaPemilik, tanggalOrder, tanggalSelesai)
     if (orders && orders.length > 0) {
         orderResults.style.display = 'block';
         const orderList = document.getElementById('orderList');
@@ -91,20 +92,20 @@ function displayResults(antrian, orders) {
             const orderItem = `
                 <div class="order-item fade-in">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="mb-0">Order #${order.id}</h6>
+                        <h6 class="mb-0">Order #${e(order.id)}</h6>
                         ${Utils.getStatusBadge(order.status)}
                     </div>
                     <p class="mb-1">
-                        <strong>Nama Pemilik:</strong> ${order.namaPemilik || '-'}
+                        <strong>Nama Pemilik:</strong> ${e(order.namaPemilik)}
                     </p>
                     <p class="mb-1">
-                        <strong>Jenis Servis:</strong> ${order.jenisServis || '-'}
+                        <strong>Jenis Servis:</strong> ${e(order.jenisServis)}
                     </p>
                     <p class="mb-1">
                         <strong>Tanggal Order:</strong> ${Utils.formatDate(order.tanggalOrder)}
                     </p>
                     <p class="mb-1">
-                        <strong>Deskripsi:</strong> ${order.deskripsi || '-'}
+                        <strong>Deskripsi:</strong> ${e(order.deskripsi)}
                     </p>
                     <p class="mb-0 text-muted">
                         <strong>Tanggal Selesai:</strong> ${order.tanggalSelesai ? Utils.formatDate(order.tanggalSelesai) : 'Belum selesai'}

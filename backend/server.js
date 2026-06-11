@@ -3,9 +3,11 @@
  * ====================================================
  */
 
-const express = require('express');
-const cors    = require('cors');
-const dotenv  = require('dotenv');
+const express      = require('express');
+const cors         = require('cors');
+const dotenv       = require('dotenv');
+const helmet       = require('helmet');       // RISK-3 FIX: Security headers
+const rateLimit    = require('express-rate-limit'); // RISK-4 FIX: Brute-force protection
 
 // Load environment variables
 dotenv.config();
@@ -27,16 +29,35 @@ app.use(cors({
     credentials: true
 }));
 
+// RISK-3 FIX: Helmet — set security headers (X-Frame-Options, CSP, dll)
+// contentSecurityPolicy dinonaktifkan sementara agar CDN Bootstrap/Axios/Swal tetap bisa load
+app.use(helmet({ contentSecurityPolicy: false }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware
+// RISK-4 FIX: Rate limiting untuk endpoint login (maks 10 percobaan per 15 menit)
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 menit
+    max:      10,              // maks 10 request per window
+    standardHeaders: true,
+    legacyHeaders:   false,
+    message: {
+        success: false,
+        message: 'Terlalu banyak percobaan login. Silakan coba lagi dalam 15 menit.'
+    }
+});
+
+// Request logging middleware (hanya aktif saat development)
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    if (process.env.NODE_ENV === 'development') {
+        console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    }
     next();
 });
 
 // API Routes
+app.use('/api/auth/login',  loginLimiter); // Rate limit khusus login
 app.use('/api/auth',      require('./routes/auth'));
 app.use('/api/antrian',   require('./routes/antrian'));
 app.use('/api/pelanggan', require('./routes/pelanggan'));
