@@ -101,17 +101,19 @@ async function startServer() {
         const { syncDatabase } = require('./models');
         await syncDatabase();
 
-        // 2. Start HTTP server
-        app.listen(PORT, () => {
-            console.log(`
+        // 2. Start HTTP server (Hanya jalankan listen jika BUKAN di Vercel)
+        if (process.env.NODE_ENV !== 'production') {
+            app.listen(PORT, () => {
+                console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║  DNR.412 Workshop Monitoring System - Backend Server       ║
 ║  ✅ Server berjalan  : http://localhost:${PORT}             ║
 ║  🗄️  Database        : MySQL (${process.env.DB_NAME})       ║
 ║  🔧 Environment     : ${process.env.NODE_ENV}               ║
 ╚════════════════════════════════════════════════════════════╝
-            `);
-        });
+                `);
+            });
+        }
     } catch (error) {
         console.error('❌ Gagal memulai server:', error.message);
         process.exit(1);

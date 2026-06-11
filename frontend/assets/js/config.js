@@ -11,7 +11,7 @@ const _isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const API_CONFIG = {
     BASE_URL: _isLocal
         ? 'http://localhost:3000/api'
-        : `${window.location.protocol}//${window.location.hostname}/api`,
+        : '/api',
     TIMEOUT: 10000,
     HEADERS: {
         'Content-Type': 'application/json',
