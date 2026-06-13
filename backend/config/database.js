@@ -19,6 +19,13 @@ const sequelize = new Sequelize(
         logging: process.env.NODE_ENV === 'development'
             ? (msg) => console.log(`[SQL] ${msg}`)
             : false,
+            
+        dialectOptions: process.env.NODE_ENV === 'production' ? {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false
+            }
+        } : {},
 
         // Connection pool
         pool: {
