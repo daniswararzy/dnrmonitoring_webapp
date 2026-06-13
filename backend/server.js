@@ -56,6 +56,38 @@ app.use((req, res, next) => {
     next();
 });
 
+// ─── Lazy DB Initialization (aman untuk Vercel Serverless) ───────────────────
+let dbInitialized = false;
+let dbInitPromise  = null;
+
+async function initDB() {
+    if (dbInitialized) return;
+    if (dbInitPromise) return dbInitPromise;
+
+    dbInitPromise = (async () => {
+        const { syncDatabase } = require('./models');
+        await syncDatabase();
+        dbInitialized = true;
+    })();
+
+    return dbInitPromise;
+}
+
+// Middleware: pastikan DB siap sebelum tiap request ke /api (kecuali health check)
+app.use('/api', async (req, res, next) => {
+    if (req.path === '/health') return next();
+    try {
+        await initDB();
+        next();
+    } catch (err) {
+        console.error('❌ DB init gagal:', err.message);
+        res.status(503).json({
+            success: false,
+            message: 'Database tidak tersedia. Silakan coba lagi.'
+        });
+    }
+});
+
 // API Routes
 app.use('/api/auth/login',  loginLimiter); // Rate limit khusus login
 app.use('/api/auth',      require('./routes/auth'));
@@ -64,7 +96,7 @@ app.use('/api/pelanggan', require('./routes/pelanggan'));
 app.use('/api/order',     require('./routes/order'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 
-// Health check endpoint
+// Health check endpoint (tidak butuh DB)
 app.get('/api/health', (req, res) => {
     res.json({
         status:    'OK',
@@ -92,17 +124,13 @@ app.use((err, req, res, next) => {
     });
 });
 
-// ─── Start Server (setelah database siap) ────────────────────────────────────
+// ─── Start Server (hanya untuk development lokal) ────────────────────────────
 const PORT = process.env.PORT || 3000;
 
-async function startServer() {
-    try {
-        // 1. Sync database & seed data awal
-        const { syncDatabase } = require('./models');
-        await syncDatabase();
-
-        // 2. Start HTTP server (Hanya jalankan listen jika BUKAN di Vercel)
-        if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
+    const { syncDatabase } = require('./models');
+    syncDatabase()
+        .then(() => {
             app.listen(PORT, () => {
                 console.log(`
 ╔════════════════════════════════════════════════════════════╗
@@ -113,13 +141,11 @@ async function startServer() {
 ╚════════════════════════════════════════════════════════════╝
                 `);
             });
-        }
-    } catch (error) {
-        console.error('❌ Gagal memulai server:', error.message);
-        process.exit(1);
-    }
+        })
+        .catch(err => {
+            console.error('❌ Gagal memulai server:', err.message);
+            process.exit(1);
+        });
 }
-
-startServer();
 
 module.exports = app;

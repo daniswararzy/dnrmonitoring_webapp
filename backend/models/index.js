@@ -38,8 +38,7 @@ async function syncDatabase() {
 
     } catch (error) {
         console.error('❌ Gagal koneksi ke database:', error.message);
-        console.error('   Pastikan MySQL berjalan dan .env sudah dikonfigurasi dengan benar');
-        process.exit(1); // Hentikan server jika DB tidak bisa terhubung
+        throw error; // Lempar error ke caller, jangan process.exit (crash serverless)
     }
 }
 
