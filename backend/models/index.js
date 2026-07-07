@@ -27,7 +27,7 @@ async function syncDatabase() {
     try {
         // Test koneksi
         await sequelize.authenticate();
-        console.log('✅ Koneksi MySQL berhasil');
+        console.log('✅ Koneksi PostgreSQL (Supabase) berhasil');
 
         // Sync semua model (buat tabel jika belum ada, update kolom jika ada perubahan)
         await sequelize.sync({ alter: true });

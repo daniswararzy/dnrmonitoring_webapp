@@ -1,46 +1,41 @@
 /**
- * Database Configuration — Sequelize + MySQL
- * ==========================================
+ * Database Configuration — Sequelize + PostgreSQL (Supabase)
+ * ===========================================================
  */
 
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const sequelize = new Sequelize(
-    process.env.DB_NAME     || 'dnr_monitoring',
-    process.env.DB_USER     || 'root',
-    process.env.DB_PASSWORD || '',
-    {
-        host:    process.env.DB_HOST || 'localhost',
-        port:    parseInt(process.env.DB_PORT) || 3306,
-        dialect: 'mysql',
+// Supabase menyediakan DATABASE_URL langsung (format: postgresql://...)
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
 
-        // Tampilkan query di console saat development
-        logging: process.env.NODE_ENV === 'development'
-            ? (msg) => console.log(`[SQL] ${msg}`)
-            : false,
-            
-        dialectOptions: process.env.NODE_ENV === 'production' ? {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            }
-        } : {},
+    // Tampilkan query di console saat development
+    logging: process.env.NODE_ENV === 'development'
+        ? (msg) => console.log(`[SQL] ${msg}`)
+        : false,
 
-        // Connection pool
-        pool: {
-            max:     5,
-            min:     0,
-            acquire: 30000,
-            idle:    10000
-        },
-
-        // Semua model pakai snake_case di DB, camelCase di JS
-        define: {
-            underscored: true,
-            timestamps:  true
+    // SSL wajib untuk Supabase (baik lokal maupun production)
+    dialectOptions: {
+        ssl: {
+            require:            true,
+            rejectUnauthorized: false  // Supabase pakai self-signed cert
         }
+    },
+
+    // Connection pool — dikecilkan agar aman di Vercel serverless
+    pool: {
+        max:     3,
+        min:     0,
+        acquire: 30000,
+        idle:    10000
+    },
+
+    // Semua model pakai snake_case di DB, camelCase di JS
+    define: {
+        underscored: true,
+        timestamps:  true
     }
-);
+});
 
 module.exports = sequelize;

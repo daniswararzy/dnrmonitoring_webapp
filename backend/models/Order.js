@@ -48,8 +48,9 @@ const Order = sequelize.define('Order', {
         }
     },
     status: {
-        type:         DataTypes.ENUM('pending', 'proses', 'selesai', 'batal'),
+        type:         DataTypes.STRING(20),
         defaultValue: 'pending'
+        // Nilai valid: 'pending' | 'proses' | 'selesai' | 'batal'
     },
     tanggalOrder: {
         type:         DataTypes.DATEONLY,

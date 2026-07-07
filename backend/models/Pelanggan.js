@@ -48,7 +48,7 @@ const Pelanggan = sequelize.define('Pelanggan', {
         defaultValue: '-'
     },
     tahunMotor: {
-        type:         DataTypes.SMALLINT.UNSIGNED,
+        type:         DataTypes.SMALLINT,  // PostgreSQL tidak support UNSIGNED
         defaultValue: new Date().getFullYear()
     },
     tanggalDaftar: {
