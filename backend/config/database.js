@@ -6,9 +6,16 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
+// Explicit require agar Vercel ncc bundler bisa mendeteksi pg secara statis
+// Tanpa ini, Sequelize melakukan dynamic require('pg') yang tidak bisa di-trace ncc
+const pg = require('pg');
+
 // Supabase menyediakan DATABASE_URL langsung (format: postgresql://...)
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
+
+    // Berikan pg module secara eksplisit — bypass dynamic require Sequelize
+    dialectModule: pg,
 
     // Tampilkan query di console saat development
     logging: process.env.NODE_ENV === 'development'
