@@ -4,7 +4,18 @@
   "builds": [
     {
       "src": "backend/server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "backend/node_modules/pg/**",
+          "backend/node_modules/pg-hstore/**",
+          "backend/node_modules/pg-pool/**",
+          "backend/node_modules/pg-connection-string/**",
+          "backend/node_modules/pg-protocol/**",
+          "backend/node_modules/pg-types/**",
+          "backend/node_modules/pgpass/**"
+        ]
+      }
     },
     {
       "src": "frontend/**",
