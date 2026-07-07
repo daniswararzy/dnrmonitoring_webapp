@@ -15,6 +15,10 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
+// Vercel & proxy environment: trust first proxy untuk IP detection yang benar
+// Wajib agar express-rate-limit bisa baca X-Forwarded-For dengan benar
+app.set('trust proxy', 1);
+
 // Middleware — CORS
 const allowedOrigins = (process.env.CORS_ORIGIN?.split(',') || ['*']).map(o => o.trim());
 
@@ -42,6 +46,8 @@ const loginLimiter = rateLimit({
     max:      10,              // maks 10 request per window
     standardHeaders: true,
     legacyHeaders:   false,
+    // Diperlukan saat berjalan di balik proxy (Vercel) — trust proxy sudah di-set di atas
+    validate: { xForwardedForHeader: false },
     message: {
         success: false,
         message: 'Terlalu banyak percobaan login. Silakan coba lagi dalam 15 menit.'
